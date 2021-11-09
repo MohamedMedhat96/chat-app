@@ -1,0 +1,2 @@
+      invoke  active_record
+      create    db/migrate/20211109021121_add_index_to_messages_chat_id_and_number.rb

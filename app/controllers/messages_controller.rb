@@ -65,12 +65,14 @@ class MessagesController < ApplicationController
       @application = Application.find_by!(token: params[:token])
     rescue StandardError => e
       render json: "The application token you have sent doesn't belong to any application", status: 400
+      return
     end
 
     begin
       @chat = @application.chats.find_by!(number: params[:chat_number])
     rescue StandardError => e
       render json: "The chat number you have sent doesn't belong to any chat in this application", status: 400
+      return
     end
   end
 

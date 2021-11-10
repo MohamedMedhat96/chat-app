@@ -41,6 +41,13 @@ class MessagesController < ApplicationController
     render json: '', status: 204
   end
 
+  def search
+    return unless params[:query].present?
+    @messages = @chat.messages
+    @response = @messages.search(params[:query])
+    render json: @response, except: %i[id chat_id], status: 200
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

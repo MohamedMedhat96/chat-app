@@ -12,12 +12,14 @@ Rails.application.routes.draw do
   post 'chats/:number' => 'chats#update'
   delete 'chats' => 'chats#destroy'
 
+
+  get 'messages/search' => 'messages#search'
   get 'messages/:number' => 'messages#show'
   put 'messages/:number' => 'messages#update'
   post 'messages/:number' => 'messages#update'
   delete 'messages' => 'messages#destroy'
 
-  resources :messages, except: %i[destroy show update]
+  resources :messages, except: %i[destroy show update search]
   resources :chats, except: %i[destroy show update]
   resources :applications, except: %i[destroy show update]
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

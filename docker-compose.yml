@@ -18,6 +18,7 @@ services:
       MYSQL_DATABASE: app
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+	  ELASTICSEARCH_URL: http://elasticsearch:9200
     ports:
       - "3307:3306" 
    app: 

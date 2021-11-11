@@ -8,4 +8,4 @@ RUN gem install bundler -v 2.2.31
 ENV BUNDLER_VERSION 2.2.31
 RUN bundle install
 ADD . /app
-RUN chmod 755 bin/entry
+RUN chmod -x bin/entry.sh

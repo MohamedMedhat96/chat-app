@@ -6,9 +6,7 @@ services:
             - discovery.type=single-node
     ports:
       - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - elasticsearch:/usr/share/elasticsearch/data 
+      - "9300:9300" 
    db:
     image: mysql:5.7
     restart: always
@@ -38,7 +36,3 @@ services:
        DB_PASSWORD: password
        DB_HOST: db
        ELASTICSEARCH_URL: http://elasticsearch:9200
-volumes:
-   elasticsearch:
-   
- 

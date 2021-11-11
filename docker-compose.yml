@@ -39,7 +39,7 @@ services:
        DB_NAME: app
        DB_PASSWORD: password
        DB_HOST: db
-       ELASTICSEARCH_URL: elasticsearch
+       ELASTICSEARCH_URL: elasticsearch/9200
 volumes:
    elasticsearch:
    

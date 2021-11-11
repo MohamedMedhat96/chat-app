@@ -4,7 +4,7 @@ RUN mkdir /app
 WORKDIR /app 
 ADD Gemfile /app/Gemfile
 ADD Gemfile.lock /app/Gemfile.lock
-RUN gem install bundler -v 2.0.1
-ENV BUNDLER_VERSION 2.0.1
+RUN gem install bundler -v 2.2.31
+ENV BUNDLER_VERSION 2.2.31
 RUN bundle install
 ADD . /app

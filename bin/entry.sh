@@ -1,3 +1,4 @@
+#!/bin/bash
 set -x
 
 if [ -f /app/tmp/pids/server.pid ]; then

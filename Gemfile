@@ -24,9 +24,9 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 
-gem 'elasticsearch-model'
+gem 'elasticsearch-model', '~> 6'
 
-gem 'elasticsearch-rails'
+gem 'elasticsearch-rails', '~> 6'
 
 gem 'resque'
 

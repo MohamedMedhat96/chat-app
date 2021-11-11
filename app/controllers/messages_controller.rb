@@ -17,10 +17,14 @@ class MessagesController < ApplicationController
 
   # POST /messages or /messages.json
   def create
+    puts "NEWWW"
     @message = @chat.messages.build(message_params)
-
-    if @message.save
-      render json: @message, except: %i[id chat_id], status: 200
+    if @message.valid?
+       @returnedNumber = Redis.incr(@application.token+"-#{@chat.number}-message-number-counter")
+       Redis.incr(@application.token+"-#{@chat.number}-total-message-number-counter")
+       AddMessageJob.perform_later(@returnedNumber, @chat.number, @application.token)
+       puts @returnedNumber
+       render json: {message_number: @returnedNumber, chat_number: @chat.number}.to_json, status: 200
     else
       render json: 'Failed to save entity', status: 500
     end
@@ -38,6 +42,8 @@ class MessagesController < ApplicationController
   # DELETE /messages/1 or /messages/1.json
   def destroy
     @message.destroy
+    @number = Redis.DECRBY(@application.token+"-#{@chat.number}-total-message-number-counter", 1)
+    puts @number
     render json: '', status: 204
   end
 
@@ -82,6 +88,6 @@ class MessagesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def message_params
-    params.require(:message).permit(:number, :data)
+    params.require(:message).permit(:data)
   end
 end

@@ -16,23 +16,36 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3307:3306" 
+      - "3307:3306"
+   redis:
+    image: "redis:4.0-alpine"
+    command: redis-server
+    volumes:
+      - "redis:/data"
    app: 
      build: .
-     command: bin/entry.sh
+     command: ["/bin/sh", "bin/docker-start"]
      volumes: 
-       - ".:/app"
+       - "/app"
      ports: 
-       - "3001:3000"
+       - "3000:3000"
      depends_on:
        - db
        - elasticsearch
+       - redis
      links:
        - db
-       - elasticsearch
+     restart: always
      environment:
        DB_USER: root
        DB_NAME: app
        DB_PASSWORD: password
        DB_HOST: db
-       ELASTICSEARCH_URL: http://elasticsearch:9200
+       ELASTICSEARCH_URL: elasticsearch
+       REDIS_HOST: redis
+       REDIS_PORT: :6379
+       REDIS_DB: 0
+       REDIS_URL_SIDEKIQ: redis://redis:6379/0
+volumes:
+  redis:
+  db:

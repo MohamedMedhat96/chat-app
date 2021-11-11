@@ -26,8 +26,10 @@ class ChatsController < ApplicationController
   def create
     @chat = @application.chats.build(chat_params)
 
-    if @chat.save
-      render json: @chat, except: %i[id application_id], status: 200
+    if @chat.valid?
+      @returnedNumber = Redis.incr(@application.token+"-chat-number-counter")
+      Redis.incr(@application.token+"-total-chat-number-counter")
+      render json: { number: @returnedNumber }.to_json, except: %i[id application_id], status: 200
     else
       render json: 'Failed to save entity', status: 500
     end
@@ -45,6 +47,7 @@ class ChatsController < ApplicationController
   # DELETE /chats or /chats/1.json
   def destroy
     @chat.destroy
+    Redis.DECRBY(@application.token+"-total-chat-number-counter")
     render json: '', status: 204
   end
 

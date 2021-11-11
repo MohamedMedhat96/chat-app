@@ -1,0 +1,12 @@
+#!/bin/sh
+set -x
+ ./bin/wait-for-it.sh -t 0 db:3306
+ ./bin/wait-for-it.sh -t 0 elasticsearch:9200
+ ./bin/wait-for-it.sh -t 0 redis:6379
+if [ -f /app/tmp/pids/server.pid ]; then
+  rm /app/tmp/pids/server.pid
+fi
+
+bundle exec rake db:migrate 2>/dev/null || bundle exec rake db:setup
+bundle exec sidekiq
+bundle exec rails s -p 3000 -b '0.0.0.0'

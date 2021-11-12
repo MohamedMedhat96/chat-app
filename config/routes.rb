@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
   get 'applications/:token' => 'applications#show'
   put 'applications/:token' => 'applications#update'
   post 'applications/:token' => 'applications#update'
@@ -11,7 +10,6 @@ Rails.application.routes.draw do
   put 'chats/:number' => 'chats#update'
   post 'chats/:number' => 'chats#update'
   delete 'chats/:number' => 'chats#destroy'
-
 
   get 'messages/search' => 'messages#search'
   get 'messages/:number' => 'messages#show'

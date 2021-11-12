@@ -24,13 +24,13 @@ class ChatsController < ApplicationController
 
   # POST /chats or /chats.json
   def create
-    @returnedNumber = Redis.current.incr(@application.token+"-chat-number-counter")
-    @chat = @application.chats.build(number:  @returnedNumber)
+    @returnedNumber = Redis.current.incr("#{@application.token}-chat-number-counter")
+    @chat = @application.chats.build(number: @returnedNumber)
     if @chat.valid?
       ChatJob.perform_later(@returnedNumber, @application.token)
       render json: { number: @returnedNumber }.to_json, except: %i[id application_id], status: 200
     else
-      Redis.current.DECRBY(@application.token+"-chat-number-counter", 1)
+      Redis.current.DECRBY("#{@application.token}-chat-number-counter", 1)
       render json: 'Failed to save entity', status: 500
     end
   end
@@ -40,7 +40,7 @@ class ChatsController < ApplicationController
     if @chat.update(number: params[:new_number])
       render json: @chat, except: %i[id application_id], status: :ok
     else
-      render json: @chat.errors, except: %i[id application_id],status: :unprocessable_entity
+      render json: @chat.errors, except: %i[id application_id], status: :unprocessable_entity
     end
   end
 

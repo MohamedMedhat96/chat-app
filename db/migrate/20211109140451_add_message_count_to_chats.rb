@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMessageCountToChats < ActiveRecord::Migration[5.2]
   def change
     add_column :chats, :messages_count, :integer, default: 0

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChatJob < ApplicationJob
   queue_as :default
 
@@ -5,6 +7,6 @@ class ChatJob < ApplicationJob
     application = Application.find_by(token: token)
     @chat = application.chats.build(number: number)
     @chat.save!
-    return
+    nil
   end
 end

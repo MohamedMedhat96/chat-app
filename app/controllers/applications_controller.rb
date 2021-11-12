@@ -3,7 +3,7 @@
 require 'securerandom'
 
 class ApplicationsController < ApplicationController
-  before_action :set_application, except: [:create, :index]
+  before_action :set_application, except: %i[create index]
   rescue_from ::ActiveRecord::RecordNotUnique, with: :name_duplicated
   # GET /applications or /applications.json
   def index
@@ -24,7 +24,7 @@ class ApplicationsController < ApplicationController
     if @application.save
       render json: @application, except: [:id], status: 200
     else
-      render json:{error: 'Failed to save entity'}.to_json , status: 500
+      render json: { error: 'Failed to save entity' }.to_json, status: 500
     end
   end
 
@@ -33,7 +33,7 @@ class ApplicationsController < ApplicationController
     if @application.update(name: application_params[:name])
       render json: @application, except: [:id], status: :ok
     else
-      render json: {error: @application.errors}.to_json, status: :unprocessable_entity
+      render json: { error: @application.errors }.to_json, status: :unprocessable_entity
     end
   end
 

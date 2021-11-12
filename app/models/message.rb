@@ -17,7 +17,7 @@ class Message < ApplicationRecord
         edge_ngram_filter: { type: 'edge_ngram', min_gram: '3', max_gram:
           '20' }
       }
-    },
+    }
   } do
     mapping do
       indexes :data, type: 'text', analyzer: 'edge_ngram_analyzer'

@@ -9,6 +9,8 @@ ADD Gemfile.lock /Gemfile.lock
 RUN gem install bundler -v 2.2.31
 ENV BUNDLER_VERSION 2.2.31
 RUN bundle install
+RUN bundle clean --force
+
 COPY bin/wait-for-it.sh /app/bin/wait-for-it.sh
 RUN dos2unix bin/docker-start
 RUN dos2unix bin/wait-for-it.sh

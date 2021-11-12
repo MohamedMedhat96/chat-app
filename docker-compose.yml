@@ -17,6 +17,8 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3307:3306"
+    volumes:
+      - "db:/var/run/mysqld"  
    redis:
     image: "redis:4.0-alpine"
     command: redis-server
@@ -42,10 +44,26 @@ services:
        DB_PASSWORD: password
        DB_HOST: db
        ELASTICSEARCH_URL: elasticsearch
-       REDIS_HOST: redis
-       REDIS_PORT: :6379
+       REDIS_HOST: redis://redis:6379/0
+       REDIS_PORT: 6379/0
        REDIS_DB: 0
-       REDIS_URL_SIDEKIQ: redis://redis:6379/0
+       REDIS_URL_SIDEKIQ: redis://redis:6379/1
+   sidekiq:
+    depends_on:
+      - 'db'
+      - 'redis'
+    build: .
+    command: bundle exec sidekiq -q default -c 10
+    volumes: 
+      - "/app"
+      - "db:/var/run/mysqld"
+    environment:
+      REDIS_URL_SIDEKIQ: redis://redis:6379/1
+      DB_USER: root
+      DB_NAME: app
+      DB_PASSWORD: password
+      DB_HOST: db
+      ELASTICSEARCH_URL: elasticsearch
 volumes:
   redis:
   db:

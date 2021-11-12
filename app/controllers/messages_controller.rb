@@ -17,33 +17,29 @@ class MessagesController < ApplicationController
 
   # POST /messages or /messages.json
   def create
-    puts "NEWWW"
-    @message = @chat.messages.build(message_params)
+    @returnedNumber = Redis.current.incr(@application.token+"-#{@chat.number}-message-number-counter")
+    @message = @chat.messages.build(number: @returnedNumber)
     if @message.valid?
-       @returnedNumber = Redis.incr(@application.token+"-#{@chat.number}-message-number-counter")
-       Redis.incr(@application.token+"-#{@chat.number}-total-message-number-counter")
-       AddMessageJob.perform_later(@returnedNumber, @chat.number, @application.token)
-       puts @returnedNumber
+      MessageJob.perform_later(@returnedNumber, @chat.number, @application.token, message_params[:data])
        render json: {message_number: @returnedNumber, chat_number: @chat.number}.to_json, status: 200
     else
+      Redis.current.DECRBY(@application.token+"-#{@chat.number}-message-number-counter", 1)
       render json: 'Failed to save entity', status: 500
     end
   end
 
   # PATCH/PUT /messages/1 or /messages/1.json
   def update
-    if @message.update(number: params[:new_number], data: params[:data])
+    if @message.update(data: params[:data])
       render json: @message, except: %i[id chat_id], status: :ok
     else
-      render json: @message.errors, except: %i[id chat_id], status: :unprocessable_entity
+      render json: {error: @application.errors}.to_json, status: :unprocessable_entity
     end
   end
 
   # DELETE /messages/1 or /messages/1.json
   def destroy
     @message.destroy
-    @number = Redis.DECRBY(@application.token+"-#{@chat.number}-total-message-number-counter", 1)
-    puts @number
     render json: '', status: 204
   end
 
@@ -60,24 +56,24 @@ class MessagesController < ApplicationController
 
   def set_application_and_chat
     unless params[:token].present?
-      render json: 'You need to send the application token to see the messages', status: 400
+      render json: {error: 'You need to send the application token to see the messages'}.to_json, status: 400
       return
     end
     unless params[:chat_number].present?
-      render json: 'You need to send the chat number to see the messages', status: 400
+      render json: {error: 'You need to send the chat number to see the messages'}.to_json, status: 400
       return
     end
     begin
       @application = Application.find_by!(token: params[:token])
     rescue StandardError => e
-      render json: "The application token you have sent doesn't belong to any application", status: 400
+      render json: {error: "The application token you have sent doesn't belong to any application"}.to_json, status: 400
       return
     end
 
     begin
       @chat = @application.chats.find_by!(number: params[:chat_number])
     rescue StandardError => e
-      render json: "The chat number you have sent doesn't belong to any chat in this application", status: 400
+      render json:{error: "The chat number you have sent doesn't belong to any chat in this application"}.to_json, status: 400
       return
     end
   end

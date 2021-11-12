@@ -4,8 +4,7 @@ class Message < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
 
-  Elasticsearch::Model.client = Elasticsearch::Client.new host: 'http://192.168.99.100:9200/'
-  belongs_to :chat
+  belongs_to :chat, counter_cache: true
 
   settings index: {
     "number_of_shards": 1,

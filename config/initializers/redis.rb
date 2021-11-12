@@ -1,2 +1,6 @@
 require 'redis'
-Redis = Redis.new(host: ENV.fetch('REDIS_HOST', '192.168.99.100'))
+unless ENV['REDIS_HOST'] == nil
+  Redis.current = Redis.new(url: 'redis://redis',
+                            port: "6379/0",
+                            db:   "0")
+end

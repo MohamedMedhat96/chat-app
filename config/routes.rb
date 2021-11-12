@@ -5,19 +5,19 @@ Rails.application.routes.draw do
   get 'applications/:token' => 'applications#show'
   put 'applications/:token' => 'applications#update'
   post 'applications/:token' => 'applications#update'
-  delete 'applications' => 'applications#destroy'
+  delete 'applications/:token' => 'applications#destroy'
 
   get 'chats/:number' => 'chats#show'
   put 'chats/:number' => 'chats#update'
   post 'chats/:number' => 'chats#update'
-  delete 'chats' => 'chats#destroy'
+  delete 'chats/:number' => 'chats#destroy'
 
 
   get 'messages/search' => 'messages#search'
   get 'messages/:number' => 'messages#show'
   put 'messages/:number' => 'messages#update'
   post 'messages/:number' => 'messages#update'
-  delete 'messages' => 'messages#destroy'
+  delete 'messages/:number' => 'messages#destroy'
 
   resources :messages, except: %i[destroy show update search]
   resources :chats, except: %i[destroy show update]

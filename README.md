@@ -1,8 +1,12 @@
 # README
 
-To run the app just use clone the repository and run the following command 
+## To run the app just use clone the repository and run the following command 
 
-docker-compose up
+
+ ```bash
+ docker-compose up
+ ```
+
 
 * Ruby version : 2.6.8
 * Rails version : 5.2.6
@@ -33,5 +37,5 @@ docker-compose up
         * body should include properties "chat_id" and "token" 
       * Get: GET hostname:3000/:number or hostname:3000/messages/:number
         * body should include properties "chat_id" and "token"
-      * Serch: GET hostname:3000/search
+      * Search: GET hostname:3000/search
         * body should include properties "chat_id", "token" and "query"
